@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
+import Image from "next/image";
 import { siteConfig } from "@/data/content";
 import { cn } from "@/lib/utils";
 
@@ -203,10 +204,11 @@ export default function Navbar() {
               className="flex items-center gap-3 group"
             >
               <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-500/30 shadow-md shadow-primary-500/10 transition-transform duration-300 group-hover:scale-110">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src="/profile/raj-profile.jpg"
                   alt="Raj Bhurtel"
+                  width={40}
+                  height={40}
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import { ArrowUp, Github, Linkedin, Twitter, Instagram, Facebook, Mail, Phone } from "lucide-react";
+import Image from "next/image";
 import { siteConfig, navLinks } from "@/data/content";
+import { sanitizeUrl } from "@/lib/utils";
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -23,7 +25,12 @@ export default function Footer() {
       : []),
     { icon: Mail, href: `mailto:${siteConfig.links.email}`, label: "Email" },
     { icon: Phone, href: `tel:${siteConfig.links.phone}`, label: "Phone" },
-  ];
+  ]
+    .map((item) => ({
+      ...item,
+      href: sanitizeUrl(item.href, { allowRelative: false, allowHash: false }),
+    }))
+    .filter((item) => item.href !== "#");
 
   return (
     <footer className="relative border-t border-gray-200 dark:border-white/5">
@@ -33,10 +40,11 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg shadow-primary-500/20 border border-primary-500/20 flex-shrink-0">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src="/profile/raj-profile.jpg"
                   alt="Raj Bhurtel"
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover block"
                 />
               </div>
@@ -64,7 +72,7 @@ export default function Footer() {
               {navLinks.map((link) => (
                 <a
                   key={link.href}
-                  href={link.href}
+                  href={sanitizeUrl(link.href, { allowRelative: true, allowHash: true })}
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-200"
                 >
                   {link.label}
@@ -84,7 +92,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   aria-label={label}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-primary-500/10 transition-all duration-300 group"
                 >
