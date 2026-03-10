@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent-gold: 41 62% 55%;
+    --border: 214 32% 91%;
+    --ring: 221 83% 53%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 240 20% 4%;
+    --foreground: 210 40% 98%;
+    --card: 240 17% 7%;
+    --card-foreground: 210 40% 98%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 14% 12%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 240 14% 12%;
+    --muted-foreground: 215 20% 65%;
+    --accent-gold: 41 62% 55%;
+    --border: 240 14% 16%;
+    --ring: 221 83% 53%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-white text-gray-900 dark:bg-dark dark:text-gray-100;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    @apply bg-primary-500/30 text-primary-900 dark:text-white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-500/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-500/50;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10;
+  }
+
+  .glass-strong {
+    @apply bg-white/80 dark:bg-white/10 backdrop-blur-2xl border border-white/30 dark:border-white/10;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 bg-clip-text text-transparent;
+  }
+
+  .gradient-text-accent {
+    @apply bg-gradient-to-r from-slate-700 via-blue-600 to-slate-700 bg-clip-text text-transparent dark:from-primary-400 dark:to-accent;
+  }
+
+  .hero-glow {
+    @apply bg-gradient-to-b from-slate-50 via-blue-50/30 to-white dark:from-primary-500/10 dark:via-accent/5 dark:to-transparent;
+  }
+
+  .glow-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(37, 99, 235, 0.4),
+      rgba(212, 168, 67, 0.2),
+      rgba(37, 99, 235, 0.1)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-14 sm:py-20 md:py-28 lg:py-32;
+  }
+
+  .container-width {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/10;
+  }
+
+  .card-base {
+    @apply glass rounded-2xl p-4 sm:p-6 md:p-8 hover-lift;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-in {
+    animation: animate-in 0.5s ease-out forwards;
+  }
+
+  @keyframes animate-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Chat scrollbar */
+  .chat-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .chat-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .chat-scroll::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 4px;
+  }
+
+  .chat-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.5);
+  }
+
+  .chat-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
+  }
+}

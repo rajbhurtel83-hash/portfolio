@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#grad3)"/>
+  <polygon points="400,100 600,300 400,500 200,300" fill="#34d399" opacity="0.9"/>
+  <circle cx="400" cy="300" r="40" fill="#0f766e" opacity="0.8"/>
+  <text x="400" y="550" font-size="32" font-family="Arial" font-weight="bold" fill="white" text-anchor="middle">Search Tree Visualizer</text>
+</svg>

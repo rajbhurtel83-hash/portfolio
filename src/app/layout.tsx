@@ -1,0 +1,123 @@
+import type { Metadata, Viewport } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
+import { ThemeProvider } from "@/components/shared/ThemeProvider";
+import { siteConfig } from "@/data/content";
+import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0f" },
+  ],
+};
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.title,
+    template: `%s — ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: [
+    "Raj Bhurtel",
+    "Computer Engineering",
+    "Developer",
+    "Nepal",
+    "Khwopa Engineering College",
+    "Software Developer",
+    "Web Developer",
+    "Entrepreneur",
+    "Portfolio",
+  ],
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.url,
+    title: siteConfig.title,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.title,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Raj Bhurtel",
+              url: siteConfig.url,
+              jobTitle: "Computer Engineering Student & Developer",
+              alumniOf: {
+                "@type": "CollegeOrUniversity",
+                name: "Khwopa Engineering College",
+              },
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Banepa, Kavre",
+                addressCountry: "Nepal",
+              },
+              sameAs: [siteConfig.links.github, siteConfig.links.linkedin].filter(Boolean),
+            }),
+          }}
+        />
+      </head>
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}
+      >
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
+    </html>
+  );
+}
