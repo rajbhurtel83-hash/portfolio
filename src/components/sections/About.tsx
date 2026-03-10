@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { MapPin, GraduationCap, Rocket, Target } from "lucide-react";
-import Image from "next/image";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { aboutContent, professionalSummary, currentWork } from "@/data/content";
 
@@ -112,11 +111,10 @@ export default function About() {
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-accent/20 rounded-3xl blur-2xl" />
               <div className="relative rounded-3xl overflow-hidden border-2 border-primary-500/20 shadow-2xl shadow-primary-500/10">
-                <Image
-                  src="/profile/raj-profile.jpg"
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/portfolio/profile/raj-profile.jpg"
                   alt="Raj Bhurtel"
-                  width={900}
-                  height={1200}
                   className="w-full h-auto max-h-[420px] sm:max-h-none object-cover object-top block"
                 />
               </div>

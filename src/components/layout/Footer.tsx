@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { ArrowUp, Github, Linkedin, Twitter, Instagram, Facebook, Mail, Phone } from "lucide-react";
-import Image from "next/image";
 import { siteConfig, navLinks } from "@/data/content";
 import { sanitizeUrl } from "@/lib/utils";
 
@@ -40,11 +39,10 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg shadow-primary-500/20 border border-primary-500/20 flex-shrink-0">
-                <Image
-                  src="/profile/raj-profile.jpg"
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/portfolio/profile/raj-profile.jpg"
                   alt="Raj Bhurtel"
-                  width={48}
-                  height={48}
                   className="w-full h-full object-cover block"
                 />
               </div>
