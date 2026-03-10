@@ -60,12 +60,13 @@ export const aboutContent = {
   paragraphs: [
     "I am a Bachelor in Computer Engineering student at Khwopa Engineering College, Bhaktapur, Nepal, affiliated with Purbanchal University. I am currently in my 5th semester.",
     "My core focus areas include full-stack web development, cybersecurity fundamentals, embedded systems, and robotics. I enjoy building software that is practical, secure, and scalable.",
+    "I am also building NirvachanX, a digital voting platform concept for Nepal focused on transparency, trust, and accessibility.",
     "Alongside engineering, I am an active founder building Elysian Official and Bastra Ladies Wear. This gives me hands-on experience in product development, branding, operations, and business strategy.",
     "I am currently completing a one-month Cybersecurity Internship at CyberWarLab, where I am strengthening practical understanding of network security, vulnerability assessment, and ethical hacking basics.",
   ],
   stats: [
     { value: "2", label: "Brands Founded" },
-    { value: "4+", label: "Core Project Areas" },
+    { value: "8+", label: "Major Projects" },
     { value: "1", label: "Hult Prize Runner-Up" },
     { value: "5th", label: "Semester CE" },
   ],
@@ -74,12 +75,13 @@ export const aboutContent = {
     "Cybersecurity Fundamentals",
     "Embedded Systems and Robotics",
     "Founder of Elysian Official & Bastra Ladies Wear",
-    "Based in Kavre, Nepal",
+    "Based in Banepa, Kavre, Nepal",
   ],
 };
 
 export const currentWork = [
-  "Developing scalable web applications with Python and Django",
+  "Developing scalable web applications using Python and Django",
+  "Designing and iterating NirvachanX, a digital voting MVP for Nepal",
   "Implementing secure authentication and maintainable backend architecture",
   "Building embedded systems and robotics automation prototypes",
   "Learning practical cybersecurity fundamentals at CyberWarLab",
@@ -139,6 +141,27 @@ export const skillCategories = [
 
 export const projects = [
   {
+    id: "ball-game-c",
+    title: "Ball Game (C Programming)",
+    shortDesc: "A core C programming project focused on game logic, memory handling, and control flow.",
+    fullDesc:
+      "Built a lightweight ball game in C to strengthen systems-level thinking, input handling, loop design, and modular logic implementation.",
+    problemSolved:
+      "Demonstrates foundational programming and algorithmic flow in low-level procedural architecture.",
+    futureImprovements: [
+      "Improve physics and collision behavior",
+      "Add level progression and score persistence",
+      "Refactor gameplay modules for better extensibility",
+    ],
+    screenshots: ["/projects/ball-game-1.svg"],
+    image: "/projects/ball-game-1.svg",
+    techStack: ["C", "Data Structures", "Algorithmic Logic"],
+    liveUrl: "",
+    githubUrl: "https://github.com/rajbhurtel83-hash",
+    category: "Systems Programming",
+    featured: true,
+  },
+  {
     id: "django-web-application-development",
     title: "Web Application Development (Python and Django)",
     shortDesc: "Scalable web application work using Django with secure architecture and maintainable backend design.",
@@ -154,6 +177,27 @@ export const projects = [
     screenshots: ["/projects/real-estate-1.svg"],
     image: "/projects/real-estate-1.svg",
     techStack: ["Python", "Django", "HTML5", "CSS", "REST APIs"],
+    liveUrl: "",
+    githubUrl: "https://github.com/rajbhurtel83-hash",
+    category: "Web Application",
+    featured: true,
+  },
+  {
+    id: "real-estate-rental",
+    title: "Real Estate Property Rental System",
+    shortDesc: "A property listing and rental workflow platform with user-centric browsing and management.",
+    fullDesc:
+      "Designed a rental system to simplify listing, searching, and matching rental properties with suitable tenants through structured workflows.",
+    problemSolved:
+      "Addresses inefficient local rental discovery and listing management through a centralized digital system.",
+    futureImprovements: [
+      "Integrate maps and geolocation filters",
+      "Add secure owner and tenant verification",
+      "Introduce a recommendation engine for better matching",
+    ],
+    screenshots: ["/projects/real-estate-1.svg"],
+    image: "/projects/real-estate-1.svg",
+    techStack: ["JavaScript", "HTML", "CSS", "Backend APIs"],
     liveUrl: "",
     githubUrl: "https://github.com/rajbhurtel83-hash",
     category: "Web Application",
@@ -181,6 +225,27 @@ export const projects = [
     featured: true,
   },
   {
+    id: "search-tree-visualizer",
+    title: "Search Tree Visualization using C++ Graphics",
+    shortDesc: "Visual representation of search tree algorithms for DSA learning and demonstration.",
+    fullDesc:
+      "Built a DSA-focused C++ project that visualizes search tree operations to make insertion, traversal, and tree structure behavior easier to understand.",
+    problemSolved:
+      "Transforms abstract tree algorithms into visual learning flows for better algorithm comprehension.",
+    futureImprovements: [
+      "Add balancing operations visualization",
+      "Support multiple tree variants",
+      "Export operation history for learning analysis",
+    ],
+    screenshots: ["/projects/search-tree-1.svg"],
+    image: "/projects/search-tree-1.svg",
+    techStack: ["C++", "Graphics", "Data Structures", "Algorithms"],
+    liveUrl: "",
+    githubUrl: "https://github.com/rajbhurtel83-hash",
+    category: "DSA / Visualization",
+    featured: true,
+  },
+  {
     id: "embedded-robotics-projects",
     title: "Embedded Systems and Robotics Projects",
     shortDesc: "Automation prototypes using Arduino, sensors, and controller logic for real-world simulations.",
@@ -199,6 +264,27 @@ export const projects = [
     liveUrl: "",
     githubUrl: "https://github.com/rajbhurtel83-hash",
     category: "Embedded / Robotics",
+    featured: true,
+  },
+  {
+    id: "nirvachanx",
+    title: "NirvachanX - Digital Voting Platform for Nepal",
+    shortDesc: "Secure digital voting MVP concept aimed at transparency, trust, and accessibility.",
+    fullDesc:
+      "NirvachanX is a civic-tech initiative focused on modernizing and securing voting workflows in Nepal through a digital-first product architecture.",
+    problemSolved:
+      "Targets trust, accessibility, and efficiency challenges in election processes through secure and transparent digital system design.",
+    futureImprovements: [
+      "Add verifiable audit trails",
+      "Integrate robust identity verification",
+      "Run pilot simulation with institutional partners",
+    ],
+    screenshots: ["/projects/nirvachanx-1.svg"],
+    image: "/projects/nirvachanx-1.svg",
+    techStack: ["Next.js", "TypeScript", "PostgreSQL", "Security Design"],
+    liveUrl: "",
+    githubUrl: "https://github.com/rajbhurtel83-hash",
+    category: "Civic Tech",
     featured: true,
   },
   {
@@ -238,6 +324,30 @@ export const leadershipRoles = [
       "Drive women-focused fashion operations with customer-centric product planning and scalable business execution.",
   },
   {
+    title: "Executive Member",
+    organization: "Knowledge Sharing Circle (KSC)",
+    description:
+      "Contribute to technical knowledge-sharing initiatives, peer learning programs, and student development activities.",
+  },
+  {
+    title: "Coordinator",
+    organization: "Khwopa Futsal Circle",
+    description:
+      "Coordinate community events, manage activity planning, and support collaborative leadership initiatives.",
+  },
+  {
+    title: "General Member",
+    organization: "Code for Change Nepal",
+    description:
+      "Participate in community-driven technical initiatives and collaborative problem-solving programs.",
+  },
+  {
+    title: "Organizer and Lead",
+    organization: "Robotics and Embedded Systems Workshops",
+    description:
+      "Led workshops, mentored participants, and coordinated technical event execution in robotics and embedded systems.",
+  },
+  {
     title: "First Runner-Up Team Member",
     organization: "Hult Prize, KhEC",
     description:
@@ -252,10 +362,13 @@ export const leadershipRoles = [
 ];
 
 export const communityWork = [
+  "Organizer of multiple technical events",
   "Participant in hackathons and robotics competitions",
-  "Experience in public speaking and technical presentations",
+  "Workshop leadership for robotics and embedded systems",
+  "Public speaking and technical presentation sessions",
   "Peer collaboration on software and embedded engineering work",
   "Active contribution to student innovation and startup discussions",
+  "Completed 160m bungee jump at The Last Resort, Bhotekoshi and received a bravery certificate",
 ];
 
 export const startupExperience = [
@@ -270,6 +383,12 @@ export const startupExperience = [
     role: "Founder",
     description:
       "Women-focused fashion venture targeting market demand with scalable operations.",
+  },
+  {
+    name: "Bastra (Hult Prize Idea)",
+    role: "Startup Concept",
+    description:
+      "Platform concept where people can buy, sell, rent, and donate clothes to build a circular fashion ecosystem.",
   },
   {
     name: "Founder Responsibilities",
@@ -301,11 +420,32 @@ export const achievements = [
     icon: "Trophy",
   },
   {
-    title: "Hackathon and Robotics Competition Participant",
+    title: "Bravery Certificate — The Last Resort Bhotekoshi Bungee",
     description:
-      "Participated in hackathons and robotics competitions with focus on practical prototyping and teamwork.",
+      "Completed the 160m bungee jump at The Last Resort, Bhotekoshi on January 9, 2025 (age 19). Recognized as Nepal's second largest bungee jump and among the world's top 10 highest.",
+    year: "2025",
+    icon: "Award",
+  },
+  {
+    title: "Hackathon Participation",
+    description:
+      "Participated in hackathons with strong execution focus and rapid prototyping approach.",
     year: "Ongoing",
     icon: "Code",
+  },
+  {
+    title: "Robotics Competition Participation",
+    description:
+      "Built and presented robotics-focused prototypes in competitive technical environments.",
+    year: "Ongoing",
+    icon: "Cpu",
+  },
+  {
+    title: "Technical Workshop Leadership",
+    description:
+      "Organized and led robotics and embedded systems workshops for student communities.",
+    year: "Ongoing",
+    icon: "Users",
   },
   {
     title: "Technical Presentation and Public Speaking",
@@ -344,6 +484,9 @@ export const personalInterests = [
   "Cybersecurity learning",
   "Technology-driven business ideas",
   "Scalable product thinking",
+  "Football",
+  "Gym and fitness",
+  "Bungee jumping",
 ];
 
 export const experiences = [
@@ -380,6 +523,16 @@ export const experiences = [
       "Strong science foundation supporting analytical thinking and engineering problem solving.",
     type: "education" as const,
     highlights: ["Physics major", "Completed in 2022"],
+  },
+  {
+    title: "Leadership and Community Roles",
+    organization: "KSC, Khwopa Futsal Circle, Code for Change Nepal",
+    location: "Nepal",
+    period: "Ongoing",
+    description:
+      "Active in student leadership, technical community building, and workshop and event organization.",
+    type: "leadership" as const,
+    highlights: ["Executive Member", "Coordinator", "Workshop organizer"],
   },
   {
     title: "Founder and Business Operator",

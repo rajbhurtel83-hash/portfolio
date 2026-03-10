@@ -43,10 +43,10 @@ export default function Achievements() {
   const items = achievements;
 
   const stats = [
-    { label: "Major Projects", value: 6, suffix: "+" },
+    { label: "Major Projects", value: 8, suffix: "+" },
     { label: "Startups Founded", value: 2, suffix: "" },
-    { label: "Leadership Roles", value: 4, suffix: "+" },
-    { label: "Competitions / Events", value: 5, suffix: "+" },
+    { label: "Leadership Roles", value: 8, suffix: "+" },
+    { label: "Competitions / Events", value: 6, suffix: "+" },
   ];
 
   return (

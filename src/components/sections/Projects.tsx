@@ -339,8 +339,8 @@ export default function Projects() {
       <div className="container-width relative">
         <SectionHeading
           label="Projects"
-          title="Selected Work"
-          description="A curated collection of projects that demonstrate technical depth and real-world impact."
+          title="All Projects"
+          description="A complete project list with each build presented separately, including software, systems, robotics, civic-tech, and cybersecurity work."
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
