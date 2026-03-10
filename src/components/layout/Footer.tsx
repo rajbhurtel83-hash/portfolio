@@ -41,7 +41,7 @@ export default function Footer() {
               <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg shadow-primary-500/20 border border-primary-500/20 flex-shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/portfolio/profile/raj-profile.jpg"
+                  src="/profile/raj-profile.jpg"
                   alt="Raj Bhurtel"
                   className="w-full h-full object-cover block"
                 />

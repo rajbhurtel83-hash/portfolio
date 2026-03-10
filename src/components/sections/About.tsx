@@ -113,7 +113,7 @@ export default function About() {
               <div className="relative rounded-3xl overflow-hidden border-2 border-primary-500/20 shadow-2xl shadow-primary-500/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/portfolio/profile/raj-profile.jpg"
+                  src="/profile/raj-profile.jpg"
                   alt="Raj Bhurtel"
                   className="w-full h-auto max-h-[420px] sm:max-h-none object-cover object-top block"
                 />
