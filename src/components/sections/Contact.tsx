@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { siteConfig } from "@/data/content";
+import { sanitizeUrl, sanitizeWebContent } from "@/lib/utils";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -30,8 +31,15 @@ const contactSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
+const LAST_CONTACT_SUBMIT_KEY = "raj_portfolio_last_contact_submit";
+const MIN_SUBMIT_INTERVAL_MS = 45_000;
+const MIN_FORM_FILL_MS = 2_500;
+
 export default function Contact() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [statusMessage, setStatusMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const formLoadedAtRef = useRef<number>(Date.now());
 
   const {
     register,
@@ -42,26 +50,99 @@ export default function Contact() {
     resolver: zodResolver(contactSchema),
   });
 
+  const safeEmail = siteConfig.links.email.replace(/[\r\n]/g, "").trim();
+  const safeMailtoBase = sanitizeUrl(`mailto:${safeEmail}`, {
+    allowRelative: false,
+    allowHash: false,
+  });
+
+  const formSubmitEndpoint = `https://formsubmit.co/ajax/${encodeURIComponent(safeEmail)}`;
+
   const onSubmit = async (data: ContactFormData) => {
     setStatus("sending");
+    setStatusMessage("");
 
     try {
-      // Client-side: open mailto link with form data
-      const subject = encodeURIComponent(data.subject);
-      const body = encodeURIComponent(
-        `Name: ${data.name}\nEmail: ${data.email}\n\n${data.message}`
-      );
-      window.open(
-        `mailto:${siteConfig.links.email}?subject=${subject}&body=${body}`,
-        "_blank"
-      );
+      if (honeypot.trim()) {
+        // Silent success for bot traffic caught by honeypot.
+        setStatus("success");
+        setStatusMessage("Thanks. Your message was submitted.");
+        setTimeout(() => {
+          setStatus("idle");
+          setStatusMessage("");
+        }, 5000);
+        return;
+      }
+
+      const fillDuration = Date.now() - formLoadedAtRef.current;
+      if (fillDuration < MIN_FORM_FILL_MS) {
+        throw new Error("Please take a moment before submitting the form.");
+      }
+
+      if (typeof window !== "undefined") {
+        const lastSubmit = Number(window.localStorage.getItem(LAST_CONTACT_SUBMIT_KEY) || "0");
+        if (Date.now() - lastSubmit < MIN_SUBMIT_INTERVAL_MS) {
+          throw new Error("Please wait a bit before sending another message.");
+        }
+      }
+
+      if (safeMailtoBase === "#") {
+        throw new Error("Email contact is currently unavailable.");
+      }
+
+      const payload = {
+        name: sanitizeWebContent(data.name),
+        email: sanitizeWebContent(data.email),
+        subject: sanitizeWebContent(data.subject),
+        message: sanitizeWebContent(data.message),
+        _subject: `Portfolio message from ${sanitizeWebContent(data.name)}: ${sanitizeWebContent(data.subject)}`,
+        _template: "table",
+        _captcha: "true",
+      };
+
+      const response = await fetch(formSubmitEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json().catch(() => ({} as Record<string, unknown>));
+
+      const failedByResponseBody =
+        typeof result === "object" &&
+        result !== null &&
+        "success" in result &&
+        String(result.success).toLowerCase() === "false";
+
+      if (!response.ok || failedByResponseBody) {
+        throw new Error("Message delivery failed");
+      }
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(LAST_CONTACT_SUBMIT_KEY, String(Date.now()));
+      }
 
       setStatus("success");
+      setStatusMessage("Message sent successfully. It has been delivered privately to Raj's inbox.");
       reset();
-      setTimeout(() => setStatus("idle"), 5000);
-    } catch {
+      setTimeout(() => {
+        setStatus("idle");
+        setStatusMessage("");
+      }, 5000);
+    } catch (error) {
       setStatus("error");
-      setTimeout(() => setStatus("idle"), 5000);
+      const fallbackMessage =
+        error instanceof Error && error.message
+          ? error.message
+          : "Something went wrong while sending your message.";
+      setStatusMessage(`${fallbackMessage} You can still contact Raj directly at ${siteConfig.links.email}.`);
+      setTimeout(() => {
+        setStatus("idle");
+        setStatusMessage("");
+      }, 5000);
     }
   };
 
@@ -77,8 +158,13 @@ export default function Contact() {
     ...(siteConfig.links.twitter
       ? [{ icon: Twitter, href: siteConfig.links.twitter, label: "Twitter" }]
       : []),
-    { icon: Mail, href: `mailto:${siteConfig.links.email}`, label: "Email" },
-  ];
+    { icon: Mail, href: safeMailtoBase, label: "Email" },
+  ]
+    .map((item) => ({
+      ...item,
+      href: sanitizeUrl(item.href, { allowRelative: false, allowHash: false }),
+    }))
+    .filter((item) => item.href !== "#");
 
   const inputClasses =
     "w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all duration-300 text-base sm:text-sm";
@@ -116,7 +202,7 @@ export default function Contact() {
 
             <div className="space-y-4">
               <a
-                href={`mailto:${siteConfig.links.email}`}
+                href={safeMailtoBase}
                 className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors group"
               >
                 <div className="w-10 h-10 rounded-xl bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-colors">
@@ -128,7 +214,7 @@ export default function Contact() {
                 <div className="w-10 h-10 rounded-xl bg-primary-500/10 flex items-center justify-center">
                   <MapPin size={16} className="text-primary-500" />
                 </div>
-                Banepa, Kavre, Nepal
+                Kavre, Nepal
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                 <div className="w-10 h-10 rounded-xl bg-primary-500/10 flex items-center justify-center">
@@ -148,7 +234,7 @@ export default function Contact() {
                     key={label}
                     href={href}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer nofollow"
                     aria-label={label}
                     className="flex flex-col items-center gap-1.5 p-3 rounded-xl glass text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:border-primary-500/30 transition-all duration-300"
                   >
@@ -172,6 +258,17 @@ export default function Contact() {
               onSubmit={handleSubmit(onSubmit)}
               className="card-base space-y-5"
             >
+              <input
+                type="text"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+                aria-hidden="true"
+              />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <input
@@ -249,6 +346,10 @@ export default function Contact() {
                 )}
               </button>
 
+              <p className="text-xs text-gray-500 dark:text-gray-500">
+                Messages are sent privately to Raj&apos;s inbox. Only Raj can access submitted messages.
+              </p>
+
               {/* Status Messages */}
               <AnimatePresence>
                 {status === "success" && (
@@ -259,7 +360,7 @@ export default function Contact() {
                     className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm"
                   >
                     <CheckCircle size={16} />
-                    Message sent successfully. I&apos;ll get back to you soon.
+                    {statusMessage || "Message sent successfully. I will get back to you soon."}
                   </motion.div>
                 )}
                 {status === "error" && (
@@ -270,7 +371,7 @@ export default function Contact() {
                     className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm"
                   >
                     <AlertCircle size={16} />
-                    Something went wrong. Please try again or email me directly.
+                    {statusMessage || "Something went wrong. Please try again or email me directly."}
                   </motion.div>
                 )}
               </AnimatePresence>

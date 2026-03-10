@@ -130,8 +130,8 @@ export default function Hero() {
             {heroContent.cta.projects}
           </a>
           <a
-            href="/resume.pdf"
-            download
+            href="/resume.txt"
+            download="Raj_Bhurtel_Resume.txt"
             className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-2xl glass text-gray-900 dark:text-white font-medium text-sm hover-lift"
           >
             <Download

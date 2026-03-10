@@ -120,7 +120,7 @@ export default function CommandPalette() {
       description: 'Navigate to startups section',
       icon: Rocket,
       action: () => {
-        document.getElementById('ventures')?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('startups')?.scrollIntoView({ behavior: 'smooth' });
       },
       category: 'navigation',
       keywords: ['startups', 'business', 'bastra', 'elysian'],
@@ -168,10 +168,27 @@ export default function CommandPalette() {
       description: 'Get Raj\'s latest resume',
       icon: Download,
       action: () => {
-        window.open('/resume.pdf', '_blank');
+        const link = document.createElement('a');
+        link.href = '/resume.txt';
+        link.download = 'Raj_Bhurtel_Resume.txt';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       },
       category: 'action',
       keywords: ['cv', 'pdf'],
+    },
+    {
+      id: 'view-resume',
+      title: 'View Resume',
+      description: 'Open Raj\'s readable resume page',
+      icon: ExternalLink,
+      action: () => {
+        window.open('/resume.html', '_blank', 'noopener,noreferrer');
+      },
+      category: 'action',
+      keywords: ['resume', 'profile', 'bio'],
     },
 
     // Theme

@@ -40,6 +40,7 @@ import {
   Mail,
 } from 'lucide-react';
 import { useAIChat } from '@/context/AIChatContext';
+import { sanitizeUrl } from '@/lib/utils';
 
 // ============================================
 // MARKDOWN RENDERER - Lightweight Custom
@@ -163,14 +164,19 @@ function renderInlineMarkdown(text: string): React.ReactNode {
           </code>
         );
         break;
-      case 'link':
+      case 'link': {
+        const safeHref = sanitizeUrl(earliest.match[2], {
+          allowRelative: true,
+          allowHash: true,
+        });
         parts.push(
-          <a key={`l-${key++}`} href={earliest.match[2]} target="_blank" rel="noopener noreferrer" 
+          <a key={`l-${key++}`} href={safeHref} target="_blank" rel="noopener noreferrer nofollow" 
              className="text-primary-400 hover:text-primary-300 underline underline-offset-2 transition-colors">
             {earliest.match[1]}
           </a>
         );
         break;
+      }
     }
 
     remaining = remaining.slice(earliest.index + earliest.match[0].length);

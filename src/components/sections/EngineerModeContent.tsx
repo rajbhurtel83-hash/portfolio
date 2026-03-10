@@ -359,7 +359,7 @@ export default function EngineerModeContent() {
               <a
                 href="https://github.com/rajbhurtel83-hash"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 text-white font-medium hover:bg-emerald-600 transition-colors"
               >
                 <span>View GitHub Profile</span>

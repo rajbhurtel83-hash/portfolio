@@ -11,7 +11,7 @@ export default function About() {
       icon: GraduationCap,
       title: "Engineering Education",
       description:
-        "Bachelor in Computer Engineering (5th Semester) at Khwopa Engineering College, affiliated with Purbanchal University.",
+        "Bachelor in Computer Engineering (2023 - Present, 5th semester) at Khwopa Engineering College, affiliated with Purbanchal University.",
     },
     {
       icon: Rocket,
@@ -29,7 +29,7 @@ export default function About() {
       icon: MapPin,
       title: "Based in Nepal",
       description:
-        "From Banepa, Kavre, Nepal, building systems and ventures with a long-term global vision.",
+        "From Kavre, Nepal, building systems and ventures with a long-term global vision.",
     },
   ];
 

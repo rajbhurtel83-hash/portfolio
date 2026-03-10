@@ -81,6 +81,27 @@ export const metadata: Metadata = {
   },
 };
 
+const personSchemaJson = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Raj Bhurtel",
+  url: siteConfig.url,
+  jobTitle: "Computer Engineering Student & Developer",
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Khwopa Engineering College",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Kavre",
+    addressCountry: "Nepal",
+  },
+  sameAs: [siteConfig.links.github, siteConfig.links.linkedin].filter(Boolean),
+})
+  .replace(/</g, "\\u003c")
+  .replace(/>/g, "\\u003e")
+  .replace(/&/g, "\\u0026");
+
 export default function RootLayout({
   children,
 }: {
@@ -90,26 +111,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; frame-ancestors 'none'; base-uri 'self'" />
+        <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+        <meta httpEquiv="Permissions-Policy" content="camera=(), geolocation=(), microphone=(self)" />
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: "Raj Bhurtel",
-              url: siteConfig.url,
-              jobTitle: "Computer Engineering Student & Developer",
-              alumniOf: {
-                "@type": "CollegeOrUniversity",
-                name: "Khwopa Engineering College",
-              },
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Banepa, Kavre",
-                addressCountry: "Nepal",
-              },
-              sameAs: [siteConfig.links.github, siteConfig.links.linkedin].filter(Boolean),
-            }),
+            __html: personSchemaJson,
           }}
         />
       </head>

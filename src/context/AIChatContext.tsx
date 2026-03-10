@@ -51,9 +51,62 @@ const GREETING_MESSAGE: ChatMessage = {
   id: 'greeting',
   role: 'ASSISTANT',
   content:
-    "Hi 👋 I'm Raj's AI assistant! I can tell you about his projects, skills, experience, and more. Ask me anything or use the quick options below to get started.",
+    "Hi, I am Raj's AI assistant. I can help with projects, skills, experience, startups, contact details, and resume links. Ask me anything.",
   timestamp: new Date().toISOString(),
 };
+
+const MAX_CHAT_INPUT_LENGTH = 700;
+
+const PROMPT_INJECTION_PATTERNS: RegExp[] = [
+  /ignore\s+(all\s+)?(previous|prior|earlier)\s+instructions?/i,
+  /(reveal|show|print|dump).*(system|developer|hidden)\s+prompt/i,
+  /\b(jailbreak|bypass|override)\b.*\b(instruction|guard|safety)\b/i,
+  /\b(roleplay as|act as)\b.*\b(system|developer|root|admin)\b/i,
+  /<\s*script\b/i,
+  /javascript\s*:/i,
+];
+
+const PROMPT_INJECTION_RESPONSE =
+  "I can only answer portfolio-related questions about Raj (projects, skills, startups, achievements, experience, contact, and vision).";
+
+const STOP_WORDS = new Set([
+  'the',
+  'a',
+  'an',
+  'and',
+  'or',
+  'to',
+  'for',
+  'of',
+  'in',
+  'on',
+  'at',
+  'is',
+  'are',
+  'am',
+  'me',
+  'my',
+  'your',
+  'you',
+  'i',
+  'with',
+  'about',
+  'tell',
+  'please',
+]);
+
+function normalizeUserInput(input: string): string {
+  return input
+    .replace(/[\u0000-\u001F\u007F]/g, ' ')
+    .replace(/[<>]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, MAX_CHAT_INPUT_LENGTH);
+}
+
+function looksLikePromptInjection(input: string): boolean {
+  return PROMPT_INJECTION_PATTERNS.some((pattern) => pattern.test(input));
+}
 
 // ============================================
 // OFFLINE KNOWLEDGE BASE
@@ -63,6 +116,72 @@ type KnowledgeEntry = {
   keywords: string[];
   response: string;
 };
+
+function tokenize(value: string): string[] {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length > 1 && !STOP_WORDS.has(token));
+}
+
+function getSmallTalkResponse(query: string): string | null {
+  if (/\b(hi|hello|hey|namaste|hola)\b/i.test(query)) {
+    return "Hello. You can ask me about Raj's projects, skills, experience, startups, resume, or contact details.";
+  }
+
+  if (/\b(how are you|how r u|how's it going)\b/i.test(query)) {
+    return "I am doing great and ready to help. Ask me anything about Raj's portfolio, resume, or technical background.";
+  }
+
+  if (/\b(thank you|thanks|thx)\b/i.test(query)) {
+    return "You are welcome. If you want, I can also show the resume, project details, or contact information.";
+  }
+
+  if (/\b(bye|goodbye|see you)\b/i.test(query)) {
+    return "Goodbye. Feel free to come back and ask anything about Raj anytime.";
+  }
+
+  if (/\b(help|what can you do|options|menu)\b/i.test(query)) {
+    return "I can help with:\n\n- About Raj and professional summary\n- Resume view and download\n- Skills and technologies\n- Project details and tech stack\n- Experience and education\n- Startups and achievements\n- Contact details and collaboration";
+  }
+
+  return null;
+}
+
+function buildProjectResponse(query: string): string | null {
+  const normalized = query.toLowerCase();
+
+  const matchedProject = projects.find((project) => {
+    const titleTokens = tokenize(project.title);
+    const descTokens = tokenize(project.shortDesc);
+    return [...titleTokens, ...descTokens].some((token) => normalized.includes(token));
+  });
+
+  if (!matchedProject) return null;
+
+  return `**${matchedProject.title}**\n\n${matchedProject.fullDesc}\n\n**Problem Solved:** ${matchedProject.problemSolved}\n\n**Tech Stack:** ${matchedProject.techStack.join(', ')}\n\n**Next Improvements:**\n${matchedProject.futureImprovements
+    .map((item) => `- ${item}`)
+    .join('\n')}\n\nSource: [GitHub](${matchedProject.githubUrl})`;
+}
+
+function scoreEntry(entry: KnowledgeEntry, lowerQuery: string, queryTokens: string[]): number {
+  let score = 0;
+
+  for (const keyword of entry.keywords) {
+    const lowerKeyword = keyword.toLowerCase();
+    if (lowerQuery.includes(lowerKeyword)) {
+      score += lowerKeyword.includes(' ') ? 10 : 5;
+    }
+
+    const keywordTokens = tokenize(lowerKeyword);
+    const overlap = keywordTokens.filter((token) => queryTokens.includes(token)).length;
+    score += overlap * 2;
+  }
+
+  return score;
+}
 
 function buildKnowledgeBase(): KnowledgeEntry[] {
   const skills = skillCategories
@@ -92,23 +211,23 @@ function buildKnowledgeBase(): KnowledgeEntry[] {
   return [
     {
       keywords: ['who', 'about', 'raj', 'yourself', 'introduce', 'tell me about', 'bio', 'background', 'profile'],
-      response: `**Raj Bhurtel** — ${heroContent.description}\n\n${aboutContent.paragraphs.join('\n\n')}\n\n**Quick Stats:**\n${aboutContent.stats.map((s) => `- ${s.label}: **${s.value}**`).join('\n')}`,
+      response: `**Raj Bhurtel** — ${heroContent.description}\n\n${professionalSummary}\n\n**Quick Stats:**\n${aboutContent.stats.map((s) => `- ${s.label}: **${s.value}**`).join('\n')}`,
     },
     {
-      keywords: ['skill', 'technical', 'programming', 'language', 'framework', 'technology', 'tech stack', 'tools', 'what can', 'proficient'],
-      response: `Here are **Raj's technical skills**:\n\n${skills}\n\n**Soft Skills:** ${softSkills.join(', ')}`,
+      keywords: ['skill', 'technical', 'programming', 'language', 'framework', 'technology', 'tech stack', 'tools', 'competency'],
+      response: `Here are **Raj's technical skills**:\n\n${skills}\n\n**Leadership and Personal Attributes:**\n${softSkills.map((skill) => `- ${skill}`).join('\n')}`,
     },
     {
-      keywords: ['project', 'work', 'portfolio', 'built', 'developed', 'created', 'nirvachan', 'ball game', 'movie ticket', 'real estate', 'embedded', 'search tree'],
+      keywords: ['project', 'work', 'portfolio', 'built', 'developed', 'created', 'django', 'movie ticket', 'embedded', 'cybersecurity'],
       response: `Here are **Raj's key projects**:\n\n${projectList}\n\nAll projects are available on [GitHub](${siteConfig.links.github}).`,
     },
     {
       keywords: ['achievement', 'award', 'accomplish', 'milestone', 'recognition', 'hult', 'prize', 'competition', 'hackathon'],
-      response: `**Achievements & Milestones:**\n\n${achievementList}\n\n**Stats:** 6+ Major Projects | 2 Startups Founded | 4+ Leadership Roles | 5+ Competitions`,
+      response: `**Achievements and Milestones:**\n\n${achievementList}`,
     },
     {
       keywords: ['startup', 'business', 'venture', 'entrepreneur', 'elysian', 'bastra', 'found', 'brand', 'clothing', 'fashion'],
-      response: `**Raj's Entrepreneurial Journey:**\n\n${startupList}\n\nRaj secured **First Runner-Up at Hult Prize (KhEC 2024)** with the Bastra sustainable thrift platform concept.`,
+      response: `**Raj's Entrepreneurial Journey:**\n\n${startupList}\n\nRaj has hands-on execution experience in product development, branding, digital positioning, and business operations.`,
     },
     {
       keywords: ['experience', 'work history', 'intern', 'job', 'career', 'cybersecurity', 'professional'],
@@ -116,7 +235,7 @@ function buildKnowledgeBase(): KnowledgeEntry[] {
     },
     {
       keywords: ['education', 'study', 'college', 'university', 'degree', 'khwopa', 'purbanchal', 'semester', 'school'],
-      response: `**Education:**\n\n- **Bachelor in Computer Engineering** — Khwopa Engineering College (Purbanchal University), 5th Semester (Ongoing)\n- **+2 Science (Physics Major)** — Completed 2022\n\nRaj focuses on software systems, embedded engineering, and applied innovation.`,
+      response: `**Education:**\n\n- **Bachelor in Computer Engineering** — Khwopa Engineering College, Bhaktapur, Nepal\n  Affiliated with Purbanchal University\n  2023 - Present (Currently in 5th Semester)\n- **+2 Science (Physics Major)** — Nepal, Completed 2022`,
     },
     {
       keywords: ['leader', 'leadership', 'role', 'organization', 'club', 'ksc', 'community', 'volunteer', 'coordinate'],
@@ -124,7 +243,7 @@ function buildKnowledgeBase(): KnowledgeEntry[] {
     },
     {
       keywords: ['contact', 'reach', 'email', 'phone', 'connect', 'hire', 'freelance', 'available', 'message'],
-      response: `**Contact Raj:**\n\n- **Email:** ${siteConfig.links.email}\n- **Phone:** ${siteConfig.links.phone}\n- **LinkedIn:** [linkedin.com/in/raj-bhurtel](${siteConfig.links.linkedin})\n- **GitHub:** [github.com/rajbhurtel83-hash](${siteConfig.links.github})\n- **Location:** Banepa, Kavre, Nepal\n\nFeel free to reach out for collaborations, opportunities, or conversations!`,
+      response: `**Contact Raj:**\n\n- **Email:** ${siteConfig.links.email}\n- **Phone:** ${siteConfig.links.phone}\n- **LinkedIn:** [linkedin.com/in/raj-bhurtel](${siteConfig.links.linkedin})\n- **GitHub:** [github.com/rajbhurtel83-hash](${siteConfig.links.github})\n- **Location:** Kavre, Nepal\n\nFeel free to reach out for collaborations, opportunities, or technical discussions.`,
     },
     {
       keywords: ['vision', 'goal', 'future', 'plan', 'aspir', 'dream', 'ambition', 'roadmap'],
@@ -140,7 +259,7 @@ function buildKnowledgeBase(): KnowledgeEntry[] {
     },
     {
       keywords: ['resume', 'cv', 'download'],
-      response: `You can view Raj's resume at [resume.txt](/resume.txt).\n\nAlternatively, scroll through this portfolio to see all of Raj's projects, skills, and experience in detail!`,
+      response: `You can view Raj's resume at [resume.html](/resume.html).\n\nYou can download it directly here: [resume.txt](/resume.txt).`,
     },
     {
       keywords: ['github', 'code', 'repository', 'repo', 'open source'],
@@ -154,31 +273,36 @@ function buildKnowledgeBase(): KnowledgeEntry[] {
 }
 
 function findBestResponse(query: string): string {
+  const smallTalkResponse = getSmallTalkResponse(query);
+  if (smallTalkResponse) {
+    return smallTalkResponse;
+  }
+
+  const projectSpecificResponse = buildProjectResponse(query);
+  if (projectSpecificResponse) {
+    return projectSpecificResponse;
+  }
+
   const kb = buildKnowledgeBase();
   const lower = query.toLowerCase();
+  const queryTokens = tokenize(lower);
   
   let bestMatch: KnowledgeEntry | null = null;
   let bestScore = 0;
 
   for (const entry of kb) {
-    let score = 0;
-    for (const keyword of entry.keywords) {
-      if (lower.includes(keyword)) {
-        score += keyword.length; // longer matches = more specific
-      }
-    }
+    const score = scoreEntry(entry, lower, queryTokens);
     if (score > bestScore) {
       bestScore = score;
       bestMatch = entry;
     }
   }
 
-  if (bestMatch && bestScore > 0) {
+  if (bestMatch && bestScore >= 4) {
     return bestMatch.response;
   }
 
-  // Default response
-  return `I don't have specific details on that, but here's what I can help with:\n\n- **About Raj** — background, education, summary\n- **Skills** — technical & soft skills\n- **Projects** — portfolio of work\n- **Startups** — entrepreneurial ventures\n- **Achievements** — awards & milestones\n- **Experience** — work & education history\n- **Contact** — how to reach Raj\n- **Vision** — goals & roadmap\n\nTry asking about any of these topics!`;
+  return `I do not have exact details for that yet, but I can still help with:\n\n- **Resume** — [View](/resume.html) and [Download](/resume.txt)\n- **Projects** — Django, C++, embedded, and cybersecurity learning\n- **Skills** — programming, web, databases, embedded, and tools\n- **Experience** — cybersecurity internship and education timeline\n- **Startups** — Elysian Official and Bastra Ladies Wear\n- **Contact** — email, phone, LinkedIn, and GitHub\n\nTry a direct question like: \"Tell me about Raj's Django project\" or \"How can I contact Raj?\"`;
 }
 
 // Simulate streaming by revealing text gradually
@@ -188,7 +312,7 @@ function simulateStreaming(
   onDone: () => void
 ) {
   let index = 0;
-  const chunkSize = 3;
+  const chunkSize = 4;
   const interval = setInterval(() => {
     index += chunkSize;
     if (index >= text.length) {
@@ -236,9 +360,12 @@ export function AIChatProvider({ children }: { children: React.ReactNode }) {
   }, [setConversationId]);
 
   const sendMessage = useCallback(async (content: string): Promise<string | null> => {
-    if (!content.trim() || isLoading) return null;
+    if (isLoading) return null;
 
-    addMessage({ role: 'USER', content });
+    const message = normalizeUserInput(content);
+    if (!message) return null;
+
+    addMessage({ role: 'USER', content: message });
     setIsLoading(true);
     setIsStreaming(true);
     setStreamingContent('');
@@ -246,7 +373,9 @@ export function AIChatProvider({ children }: { children: React.ReactNode }) {
     // Small delay to feel natural
     await new Promise((r) => setTimeout(r, 300 + Math.random() * 400));
 
-    const response = findBestResponse(content);
+    const response = looksLikePromptInjection(message)
+      ? PROMPT_INJECTION_RESPONSE
+      : findBestResponse(message);
 
     return new Promise((resolve) => {
       cleanupRef.current = simulateStreaming(

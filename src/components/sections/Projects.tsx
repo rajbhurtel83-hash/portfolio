@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ExternalLink, Github, X, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { projects } from "@/data/content";
+import { sanitizeUrl } from "@/lib/utils";
 
 function ProjectCard({
   project,
@@ -14,6 +15,15 @@ function ProjectCard({
   project: (typeof projects)[0];
   onOpen: () => void;
 }) {
+  const safeGithubUrl = sanitizeUrl(project.githubUrl, {
+    allowRelative: false,
+    allowHash: false,
+  });
+  const safeLiveUrl = sanitizeUrl(project.liveUrl, {
+    allowRelative: false,
+    allowHash: false,
+  });
+
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -101,11 +111,11 @@ function ProjectCard({
           {/* Actions */}
           <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5">
             <div className="flex gap-2">
-              {project.githubUrl && (
+              {safeGithubUrl !== "#" && (
                 <a
-                  href={project.githubUrl}
+                  href={safeGithubUrl}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   onClick={(e) => e.stopPropagation()}
                   className="p-2 rounded-lg text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200"
                   aria-label="View source code"
@@ -113,11 +123,11 @@ function ProjectCard({
                   <Github size={16} />
                 </a>
               )}
-              {project.liveUrl && (
+              {safeLiveUrl !== "#" && (
                 <a
-                  href={project.liveUrl}
+                  href={safeLiveUrl}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   onClick={(e) => e.stopPropagation()}
                   className="p-2 rounded-lg text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200"
                   aria-label="View live demo"
@@ -143,12 +153,21 @@ function ProjectModal({
   project: (typeof projects)[0];
   onClose: () => void;
 }) {
+  const safeGithubUrl = sanitizeUrl(project.githubUrl, {
+    allowRelative: false,
+    allowHash: false,
+  });
+  const safeLiveUrl = sanitizeUrl(project.liveUrl, {
+    allowRelative: false,
+    allowHash: false,
+  });
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-3 sm:p-4"
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
@@ -158,7 +177,8 @@ function ProjectModal({
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl bg-white dark:bg-dark-100 shadow-2xl border border-gray-200 dark:border-white/10"
+        data-lenis-prevent
+        className="relative w-full max-w-2xl max-h-[88dvh] md:max-h-[85vh] overflow-y-auto overscroll-contain touch-pan-y rounded-3xl bg-white dark:bg-dark-100 shadow-2xl border border-gray-200 dark:border-white/10"
       >
         {/* Header */}
         <div className="relative h-56 bg-gradient-to-br from-primary-500/30 to-accent/20 overflow-hidden">
@@ -259,21 +279,21 @@ function ProjectModal({
 
           {/* Links */}
           <div className="flex gap-3 pt-6 border-t border-gray-200 dark:border-white/5">
-            {project.githubUrl && (
+            {safeGithubUrl !== "#" && (
               <a
-                href={project.githubUrl}
+                href={safeGithubUrl}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl glass text-sm font-medium text-gray-900 dark:text-white hover-lift"
               >
                 <Github size={16} /> Source Code
               </a>
             )}
-            {project.liveUrl && (
+            {safeLiveUrl !== "#" && (
               <a
-                href={project.liveUrl}
+                href={safeLiveUrl}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-medium shadow-lg shadow-primary-500/25 hover:-translate-y-0.5 transition-all duration-300"
               >
                 <ExternalLink size={16} /> Live Demo
@@ -291,6 +311,26 @@ export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<
     (typeof projects)[0] | null
   >(null);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedProject(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [selectedProject]);
 
   return (
     <section id="projects" className="section-padding relative">

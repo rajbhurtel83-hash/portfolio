@@ -1,0 +1,99 @@
+RAJ BHURTEL
+Kavre, Nepal
+Email: rajbhurtel83@gmail.com
+Phone: +977-9803084921
+LinkedIn: https://www.linkedin.com/in/raj-bhurtel
+GitHub: https://github.com/rajbhurtel83-hash
+
+PROFESSIONAL SUMMARY
+Results-driven Computer Engineering student with strong interests in full-stack web development, cybersecurity, embedded systems, and startup innovation. Experienced in developing practical software systems and automation prototypes. First Runner-Up at the Hult Prize (KhEC) with proven leadership and entrepreneurial ability. Founder of emerging clothing brands with hands-on experience in product development, branding, and business operations. Passionate about building scalable technology solutions that combine engineering expertise with strategic thinking.
+
+EDUCATION
+Bachelor in Computer Engineering
+Khwopa Engineering College, Bhaktapur, Nepal
+Affiliated with Purbanchal University
+2023 - Present (Currently in 5th Semester)
+
++2 Science (Physics Major)
+Nepal | Completed 2022
+
+CORE COMPETENCIES
+- Full-Stack Web Development
+- Cybersecurity Fundamentals
+- Embedded Systems and Robotics
+- Agile Project Management
+- Startup MVP Development
+- Technical Problem Solving
+- Business Strategy and Execution
+
+TECHNICAL SKILLS
+Programming Languages:
+- C, C#, C++, Python, JavaScript
+
+Web Technologies:
+- HTML5, CSS, Django, REST API Integration
+
+Databases:
+- MySQL, PostgreSQL
+
+Embedded Systems and Hardware:
+- Arduino, Microcontrollers, Sensors, Automation Systems, Hardware-Software Integration
+
+Tools and Platforms:
+- Git, GitHub, Jira, Cloudflare
+
+Design and Creative Tools:
+- Adobe Photoshop, Adobe Lightroom, Adobe Acrobat, Canva, Figma, Blender
+
+PROFESSIONAL EXPERIENCE
+Cybersecurity Intern
+CyberWarLab (Remote/Training Program)
+2026 - Present (1-Month Internship)
+- Learning practical cybersecurity fundamentals including network security and ethical hacking basics
+- Understanding vulnerability assessment and common cyber threats
+- Gaining hands-on exposure to security tools and penetration testing concepts
+
+PROJECT EXPERIENCE
+Web Application Development (Python and Django)
+- Developing scalable web applications using Django framework
+- Implementing authentication systems and secure database structures
+- Designing backend architecture for performance and maintainability
+
+Movie Ticket Booking System (C++)
+- Built an offline ticket booking system using file handling
+- Implemented seat reservation, cancellation, and availability management
+- Structured modular program logic to ensure data persistence
+
+Embedded Systems and Robotics Projects
+- Developed automation prototypes using Arduino and sensors
+- Integrated control mechanisms for hardware-software interaction
+- Applied embedded programming for real-world automation simulations
+
+ENTREPRENEURIAL EXPERIENCE
+Founder - Elysian Official
+Premium clothing brand focused on modern fashion, product quality, and digital brand positioning.
+
+Founder - Bastra Ladies Wear
+Women-focused fashion venture targeting market demand with scalable operations.
+
+Key Responsibilities:
+- Brand development and strategic market positioning
+- Product development and supply chain coordination
+- MVP testing and business strategy planning
+- Digital marketing and customer engagement
+
+ACHIEVEMENTS
+- First Runner-Up - Hult Prize, Khwopa Engineering College
+- Participant in hackathons and robotics competitions
+- Experience in public speaking and technical presentations
+
+FINANCE AND MARKET INTERESTS
+- Long-term value investing
+- Beginner-level trading with focus on risk management
+- Strong interest in startups, financial markets, and economic systems
+
+LEADERSHIP AND PERSONAL ATTRIBUTES
+- Strategic thinker with entrepreneurial mindset
+- Strong communication and presentation skills
+- Adaptable and fast learner
+- Results-oriented and execution-focused
