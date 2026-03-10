@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "Raj Bhurtel — Engineer, Founder, Technology Innovator",
   description:
     "Results-driven Computer Engineering student, startup founder, and systems builder from Nepal focused on full-stack engineering, embedded systems, robotics, and scalable digital innovation.",
-  url: "https://rajbhurtel83-hash.github.io",
+  url: "https://rajbhurtel83-hash.github.io/portfolio",
   ogImage: "/og-image.png",
   links: {
     github: "https://github.com/rajbhurtel83-hash",
